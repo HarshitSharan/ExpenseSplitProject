@@ -1,18 +1,14 @@
-package org.hsharan.model;
+package org.hsharan.userAuth;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter @Setter @NoArgsConstructor @ToString @AllArgsConstructor
 @Entity
 public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
     @Id

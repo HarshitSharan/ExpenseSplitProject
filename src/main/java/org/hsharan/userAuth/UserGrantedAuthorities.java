@@ -1,4 +1,4 @@
-package org.hsharan.model;
+package org.hsharan.userAuth;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -1,7 +1,5 @@
-package org.hsharan.service;
+package org.hsharan.userAuth;
 
-import org.hsharan.model.UserDetails;
-import org.hsharan.repository.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,4 +16,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 throw new UsernameNotFoundException("User Not Found");
         return userDetails;
     }
+
+
 }
