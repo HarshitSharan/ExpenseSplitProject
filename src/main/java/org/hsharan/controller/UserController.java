@@ -1,7 +1,8 @@
 package org.hsharan.controller;
 
+import org.hsharan.service.ServiceException;
 import org.hsharan.userAuth.UserDetails;
-import org.hsharan.userAuth.UserSerivce;
+import org.hsharan.userAuth.AuthUserSerivce;
 import org.hsharan.userAuth.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,13 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/user")
+@RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserSerivce userSerivce;
+    AuthUserSerivce authUserSerivce;
     @GetMapping
     public String base(@RequestParam String pass){
         String password = passwordEncoder.encode(pass);
@@ -29,15 +31,18 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDetails> user(@PathVariable String userId){
-        UserDetails userDetails = userSerivce.findUserById(userId);
-        userDetails.setPassword("**************");
+        UserDetails userDetails = authUserSerivce.findUserById(userId);
+        if(userDetails!=null) {
+            userDetails.setPassword("**************");
+        }
         return ResponseEntity.ok(userDetails);
     }
 
-    @PostMapping("/")
+    @PostMapping
+
     public ResponseEntity<String> addUser(@RequestBody UserDetails userDetails){
         try {
-            userSerivce.addUser(userDetails);
+            authUserSerivce.addUser(userDetails);
         } catch (ValidationException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

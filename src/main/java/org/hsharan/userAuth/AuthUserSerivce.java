@@ -1,5 +1,8 @@
 package org.hsharan.userAuth;
 
+import org.hsharan.entity.UserEntity;
+import org.hsharan.service.ServiceException;
+import org.hsharan.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -8,10 +11,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Service
-public class UserSerivce {
+public class AuthUserSerivce {
 
     @Autowired
     UserDetailsRepository userDetailsRepository;
+    @Autowired
+    UserService userService;
     @Autowired
     PasswordEncoder passwordEncoder;
     public void addUser(UserDetails userDetails) throws ValidationException {
@@ -20,6 +25,8 @@ public class UserSerivce {
         }
         UserValidations.validateUser(userDetails);
         userDetails.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+
+        userService.addUser(userService.convertAuthUserToUserEntity(userDetails));
         userDetailsRepository.save(userDetails);
     }
 

@@ -11,10 +11,6 @@ import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @ToString
 public class GroupDto {
-    private String groupId;
-    @Nullable
-    private Date createdAt;
-    private List<UserDto> users;
+    private List<String> usersId;
     private String name;
-    private List<ExpenseDto> expenseDtoList;
 }

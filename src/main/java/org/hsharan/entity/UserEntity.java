@@ -19,6 +19,7 @@ public class UserEntity {
     @ManyToMany
     private List<GroupEntity> groupList;
 
+
     @OneToMany(mappedBy = "user")
     private List<SplitEntity> pendingPayList;
 }
