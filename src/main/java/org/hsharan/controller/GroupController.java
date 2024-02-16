@@ -44,4 +44,18 @@ public class GroupController {
         }
         return ResponseEntity.ok("Successfully Removed the Member");
     }
+
+    @PostMapping("/{groupId}/addMember/{userId}")
+    public ResponseEntity<String> addMember(@PathVariable String groupId,@PathVariable String userId){
+        UserDetails user= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+            groupService.addMember(groupId,userId,userService.convertAuthUserToUserEntity(user));
+        }
+        catch (ServiceException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        return ResponseEntity.ok("Member added Successfully");
+    }
+
+
 }

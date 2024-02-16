@@ -77,4 +77,80 @@ public class GroupService {
         group.getUsers().remove(memberToRemove);
         groupRepository.save(group);
     }
+    public Boolean isUserInGroup(GroupEntity group,UserEntity user) throws ServiceException {
+        if(group==null){
+            throw new ServiceException("Unable to find Group");
+        }
+        if(user==null){
+            throw new ServiceException("Unable to find User");
+        }
+        boolean isPresent =false;
+        for (UserEntity var : group.getUsers()){
+            if(var.getId().equals(user.getId())){
+                isPresent =true;
+                break;
+            }
+        }
+        return isPresent;
+/*        if(!group.getUsers().contains(user)){
+            *//*throw new ServiceException(
+                    MessageFormat.format(
+                            "Unable to find user By Id : {0} in Group by Id: {1}",
+                            user.getId(),
+                            group.getGroupId()
+                    ));*//*
+            return false;
+        }
+        else{
+            return true;
+        }*/
+    }
+
+    public Boolean isUserGroupCreator(GroupEntity group,UserEntity user) throws ServiceException {
+        if(!group.getCreatedBy().equals(user)){
+            /*throw new ServiceException(
+                    MessageFormat.format(
+                            "User Id : {0} is not the creator to group id {1}",
+                            user.getId(),group.getGroupId()
+                    ));*/
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+    public void addMember(String groupId,String userId,UserEntity addedBy) throws ServiceException {
+        UserEntity user = userService.getUserById(userId);
+
+        GroupEntity group = getGroupById(groupId);
+
+
+        if(group == null){
+            throw new ServiceException(MessageFormat.format("Unable to find Group By Id : {0}",groupId));
+        }
+
+        if(user == null){
+            throw new ServiceException(MessageFormat.format("Unable to find user By Id : {0}",userId));
+        }
+
+        if(!isUserInGroup(group,addedBy)){
+            throw new ServiceException("You don't have sufficient privilege to add member to this group");
+        }
+        if(isUserInGroup(group,user)){
+            throw new ServiceException(
+                    MessageFormat.format(
+                            "Given user with id : {0} is already memeber of the group",
+                            user.getId()
+                    ));
+        }
+        group.getUsers().add(user);
+        user.getGroupList().add(group);
+
+        groupRepository.save(group);
+        userService.addUser(user);
+    }
+
+    public GroupEntity getGroupById(String groupId){
+        return groupRepository.findById(groupId).orElse(null);
+    }
 }
